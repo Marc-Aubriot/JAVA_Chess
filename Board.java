@@ -1,13 +1,8 @@
-import java.util.HashMap;
-
 public class Board {
 
-    String[][] Board = new String[8][8];
-    HashMap<String, String> players = new HashMap<>();
-
+    String[][] board = new String[8][8];
     Piece[] white_pieces = new Piece[16];
     Piece[] black_pieces = new Piece[16];
-
 
     Board() {
         setup();
@@ -20,7 +15,7 @@ public class Board {
         // rempli les cases vides avec un string "   "
         for (int r=0; r<8; r++) {
             for (int c=0; c<8; c++) {
-                Board[r][c] = "   ";
+                board[r][c] = "   ";
             }
         }
 
@@ -69,32 +64,32 @@ public class Board {
         switch (type) {
             case 'p':
                 new_piece = new Pawn(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             case 'r':
                 new_piece = new Rook(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             case 'c':
                 new_piece = new Cavalier(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             case 'b':
                 new_piece = new Bishop(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             case 'q':
                 new_piece = new Queen(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             case 'k':
                 new_piece = new King(id, coordinates, color);
-                Board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
+                board[new_piece.coordinates[0]][new_piece.coordinates[1]] = new_piece.id;
                 return new_piece;
 
             default:
@@ -107,7 +102,7 @@ public class Board {
     public void erase() {
         for (int r=0; r<8; r++) {
             for (int c=0; c<8; c++) {
-                Board[r][c] = "   ";
+                board[r][c] = "   ";
             }
         }
     }
@@ -123,7 +118,7 @@ public class Board {
 
         for (int r=0; r<8; r++) {
                         
-            System.out.println(""+(Board.length-r)+" | "+Board[r][0]+" | "+Board[r][1]+" | "+Board[r][2]+" | "+Board[r][3]+" | "+Board[r][4]+" | "+Board[r][5]+" | "+Board[r][6]+" | "+Board[r][7]+" |");
+            System.out.println(""+(board.length-r)+" | "+board[r][0]+" | "+board[r][1]+" | "+board[r][2]+" | "+board[r][3]+" | "+board[r][4]+" | "+board[r][5]+" | "+board[r][6]+" | "+board[r][7]+" |");
             
             if (r!=7) { 
                 System.out.println("  |-----|-----|-----|-----|-----|-----|-----|-----|"); 
@@ -135,14 +130,17 @@ public class Board {
         System.out.println("     a     b     c     d     e     f     g     h  ");
     } 
 
-    // vérifie que l'input correspond à une pièce valide 
-    public boolean isChessPieceValid(String piece_string) {
-        
-        if (players.get(piece_string) != null) {
-            return true;
-        } else {
-            return false;
+    // vérifie que l'input correspond à une pièce valide et de la bonne couleur
+    public boolean isChessPieceValid(String piece_id_string, String active_player) {
+
+        for (int i=0; i<16; i++) {
+            if (active_player == "white" && piece_id_string.equals(white_pieces[i].id)) {
+                return true;
+            } else if (active_player == "black" && piece_id_string.equals(black_pieces[i].id)) {
+                return true;
+            }
         }
+        return false;
     }
     
     // vérifie que l'input correspond à une coordonnée valide
@@ -163,5 +161,25 @@ public class Board {
         return true;
     }
 
-    
+    // vérifie que l'input correspond à une pièce valide et de la bonne couleur
+    public Piece getPiece(String piece_id_string, String active_player) {
+        
+        for (int i=0; i<16; i++) {
+            if (active_player == "white" && piece_id_string.equals(white_pieces[i].id)) {
+                return white_pieces[i];
+            } else if (active_player == "black" && piece_id_string.equals(black_pieces[i].id)) {
+                return black_pieces[i];
+            }
+        }
+
+        return null;
+    }
+
+    // bouge une pièce d'un point à un a utre
+    public void movePieceToPoint(Piece piece, String point) {
+        board[piece.coordinates[0]][piece.coordinates[1]] = "   ";
+        piece.coordinates = piece.getCoordinates(point);
+        board[piece.coordinates[0]][piece.coordinates[1]] = piece.id;
+    }
+
 }
