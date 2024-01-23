@@ -1,6 +1,6 @@
-public class Pawn extends Piece{
+public class King extends Piece{
     
-    Pawn(String piece_id, String piece_coordinates, String color) {
+    King(String piece_id, String piece_coordinates, String color) {
         super(piece_id, piece_coordinates, color);
         
     }
