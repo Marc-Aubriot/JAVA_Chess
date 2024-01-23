@@ -21,12 +21,10 @@ public class Menu {
 
         switch (ans) {
             case 'p':
-            menu.close(); // prevent memory leak
-            new Chess();
+            new Chess(menu);
                 break;
         
             case 'q':
-            menu.close(); // prevent memory leak
             System.exit(0);
                 break;
 

@@ -4,65 +4,77 @@ import java.util.HashMap;
 public class Chess {
 
     String[][] board = new String[8][8];
-    HashMap<String, String> black_player = new HashMap<>();
-    HashMap<String, String> white_player = new HashMap<>();
+    HashMap<String, String> players = new HashMap<>();
 
-    Chess() {
+    Chess(Scanner menu) {
+
+        // message d'accueil
         System.out.println(("=== JAVA Chess ==="));
-        System.out.println(("Hello Chess"));
+        System.out.println(("Hello Chess"));     
 
-        Scanner userInterface = new Scanner(System.in);
-        //String userInput = userInterface.nextLine();
-        //userInterface.close(); // prevent memory leak
-
-        
-
-        // game loop
-        // white player
-        //updateBoard();
-        //getUserInput(userInterface);
-        setupBoard();
-        eraseBoard();
-        updateBoard();
-        printBoard();
-
+        // variables
+        int loop = 0;
+        gameLoop(menu, loop);
     }
+
+    // main game loop
+    public void gameLoop(Scanner menu, int loop) {
+        if (loop == 0) {
+            eraseBoard();
+            setupBoard();
+            updateBoard();
+            printBoard();
+        } else {
+            eraseBoard();
+            updateBoard();
+            printBoard();
+        }
+
+        loop++;
+        getUserInput(menu, loop);
+        gameLoop(menu, loop);
+    }
+
     // place les pièces dans leur position de départ
     public void setupBoard() {
-        black_player.put("BR1" , "a8");
-        black_player.put("BR2" , "h8");
-        black_player.put("BC1" , "b8");
-        black_player.put("BC2" , "g8");
-        black_player.put("BB1" , "c8");
-        black_player.put("BB2" , "f8");
-        black_player.put("BQ1" , "d8");
-        black_player.put("BK1" , "e8");
-        black_player.put("BP1" , "a7");
-        black_player.put("BP2" , "b7");
-        black_player.put("BP3" , "c7");
-        black_player.put("BP4" , "d7");
-        black_player.put("BP5" , "e7");
-        black_player.put("BP6" , "f7");
-        black_player.put("BP7" , "g7");
-        black_player.put("BP8" , "h7");
 
-        white_player.put("WR1" , "a1");
-        white_player.put("WR2" , "h1");
-        white_player.put("WC1" , "b1");
-        white_player.put("WC2" , "g1");
-        white_player.put("WB1" , "c1");
-        white_player.put("WB2" , "f1");
-        white_player.put("WQ1" , "d1");
-        white_player.put("WK1" , "e1");
-        white_player.put("WP1" , "a2");
-        white_player.put("WP2" , "b2");
-        white_player.put("WP3" , "c2");
-        white_player.put("WP4" , "d2");
-        white_player.put("WP5" , "e2");
-        white_player.put("WP6" , "f2");
-        white_player.put("WP7" , "g2");
-        white_player.put("WP8" , "h2");
+        // pièces noires
+        players.put("BR1" , "a8");
+        players.put("BR2" , "h8");
+        players.put("BC1" , "b8");
+        players.put("BC2" , "g8");
+        players.put("BB1" , "c8");
+        players.put("BB2" , "f8");
+        players.put("BQ1" , "d8");
+        players.put("BK1" , "e8");
+        players.put("BP1" , "a7");
+        players.put("BP2" , "b7");
+        players.put("BP3" , "c7");
+        players.put("BP4" , "d7");
+        players.put("BP5" , "e7");
+        players.put("BP6" , "f7");
+        players.put("BP7" , "g7");
+        players.put("BP8" , "h7");
+
+        // pièces blanches
+        players.put("WR1" , "a1");
+        players.put("WR2" , "h1");
+        players.put("WC1" , "b1");
+        players.put("WC2" , "g1");
+        players.put("WB1" , "c1");
+        players.put("WB2" , "f1");
+        players.put("WQ1" , "d1");
+        players.put("WK1" , "e1");
+        players.put("WP1" , "a2");
+        players.put("WP2" , "b2");
+        players.put("WP3" , "c2");
+        players.put("WP4" , "d2");
+        players.put("WP5" , "e2");
+        players.put("WP6" , "f2");
+        players.put("WP7" , "g2");
+        players.put("WP8" , "h2");
     }
+
     // récupère les coordonnées de la pièce à partir de son string de coordonnée
     public int[] getCoordinates(String coordinates_string) {
         int[] coordinates = new int[2];
@@ -167,53 +179,115 @@ public class Chess {
     // TODO: met à jour les positions des pièces dans la logique
     public void updateBoard() {
     
-        // pour chaque pièce noire, créé un tableau et récupère les coordonnées dans la tableau, puis les 2 premières lettre de la pièce
-        for (String i : black_player.keySet()) { 
+        // pour chaque pièce, créé un tableau et récupère les coordonnées dans la tableau
+        for (String i : players.keySet()) { 
             int[] c = new int[2]; 
-            c = getCoordinates(black_player.get(i)); 
-            String sub_string = i.substring(0, 2); 
-            board[c[0]][c[1]] = sub_string; 
+            c = getCoordinates(players.get(i)); 
+            board[c[0]][c[1]] = i; 
         }
-
-        // pareil pour les blancs
-        for (String i : white_player.keySet()) { 
-            int[] c = new int[2]; 
-            c = getCoordinates(white_player.get(i)); 
-            String sub_string = i.substring(0, 2); 
-            board[c[0]][c[1]] = sub_string; 
-        }
-        
-        
     }
 
     // met le plateau logique à 0
     public void eraseBoard() {
         for (int r=0; r<8; r++) {
             for (int c=0; c<8; c++) {
-                board[r][c] = "  ";
+                board[r][c] = "   ";
             }
         }
     }
+    
     // print le plateau
     public void printBoard() {
-        System.out.println("  =========================================");
+        System.out.println("  =================================================");
 
         for (int r=0; r<8; r++) {
                         
             System.out.println(""+(board.length-r)+" | "+board[r][0]+" | "+board[r][1]+" | "+board[r][2]+" | "+board[r][3]+" | "+board[r][4]+" | "+board[r][5]+" | "+board[r][6]+" | "+board[r][7]+" |");
             
             if (r!=7) { 
-                System.out.println("  |----|----|----|----|----|----|----|----|"); 
+                System.out.println("  |-----|-----|-----|-----|-----|-----|-----|-----|"); 
             }
             
         }
 
-        System.out.println("  =========================================");
-        System.out.println("    a    b    c    d    e    f    g    h  ");
+        System.out.println("  =================================================");
+        System.out.println("     a     b     c     d     e     f     g     h  ");
     } 
 
-    // TODO: récupère les inputs du joueur
-    public static void getUserInput(Scanner userInterface) {
+    // récupère les inputs du joueur
+    public void getUserInput(Scanner menu, int loop) {
 
+        // Alterne le joueur
+        String active_player = "";
+        if (loop % 2 > 0) {
+            active_player = "Blanc";
+        } else {
+            active_player = "Noir";
+        }
+
+        System.out.println("Tour n°: "+loop+ ". C'est au joueur "+active_player+" de jouer.");
+        System.out.println("Sélectionner la pièce à jouer.");
+        
+        // récupère l'input du joueur, quelle pièce veut-il jouer
+        String userInput = menu.nextLine();
+        userInput = userInput.toUpperCase();
+        boolean input_is_valid = isChessPieceValid(userInput);
+
+        // si l'input ou son format sont invalides, on redemande
+        while (userInput.length() != 3 || !input_is_valid) {
+            System.out.println("Pièce introuvable ! Sélectionner la pièce à jouer. 3 caractères maximum.(ex: WP1)");
+            userInput = menu.nextLine();
+            userInput = userInput.toUpperCase();
+            input_is_valid = isChessPieceValid(userInput);
+        }
+
+        // récupère la pièce dans une variable
+        String piece = userInput;
+
+        // on récupère les coordonnées de la destination de la pièce
+        System.out.println("Sélectionner où placer la pièce.");
+        userInput = menu.nextLine();
+        userInput = userInput.toLowerCase();
+        boolean input_2_is_valid = areCoordinatesValid(userInput);
+
+        // si l'input ou sont format sont invalides, on redemande
+        while (userInput.length() != 2 || !input_2_is_valid) {
+            System.out.println("Coordonnées erronées ! Sélectionner où placer la pièce. (ex: A3)");
+            userInput = menu.nextLine();
+            userInput = userInput.toLowerCase();
+            input_2_is_valid = areCoordinatesValid(userInput);
+        }
+
+        // assigne les coordonnées à des variables et bouge la pièce à son emplacement
+        String point_B = userInput;
+        players.put(piece, point_B);
+    }
+
+    // vérifie que l'input correspond à une pièce valide 
+    public boolean isChessPieceValid(String piece_string) {
+        
+        if (players.get(piece_string) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    // vérifie que l'input correspond à une coordonnée valide
+    public boolean areCoordinatesValid(String coordinates) {
+        char raw_char_1 = coordinates.charAt(0);
+        char x = Character.toLowerCase(raw_char_1);
+        char raw_char_2 = coordinates.charAt(1);
+        int y = raw_char_2 - '0';
+
+        if (x != 'a' && x != 'b' && x != 'c' && x != 'd' && x != 'e' && x != 'f' && x != 'g' && x != 'h') {
+            return false;
+        } 
+
+        if (y != 1 & y != 2 && y != 3 && y != 4 && y != 5 && y != 6 && y != 7 && y != 8) {
+            return false;
+        } 
+
+        return true;
     }
 }
